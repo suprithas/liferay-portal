@@ -15,20 +15,42 @@
 --%>
 
 <%@ include file="/init.jsp" %>
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
-
-<portlet:defineObjects />
 
 <%
-	PortletPreferences prefs = renderRequest.getPreferences();
-	String greeting = (String)prefs.getValue(
-			"greeting", "Hello! Welcome to our edit entry portal.");
+	String clientID = ParamUtil.getString(request, "client_id");
+	String redirectURI = ParamUtil.getString(request, "redirect_uri");
+	String scope = ParamUtil.getString(request, "scope");
+
+	long userId = user.getUserId();
 %>
 
-<p><%= greeting %></p>
+<liferay-ui:icon-menu direction="down" icon="<%= StringPool.BLANK %>"
+					  markupView="lexicon" message="<%= StringPool.BLANK %>"
+					  showWhenSingleIcon="<%= true %>">
 
-<portlet:renderURL var="editGreetingURL">
-	<portlet:param name="mvcPath" value="/edit_entry.jsp" />
-</portlet:renderURL>
+	<%
+		boolean hasViewPermission = UserPermissionUtil.
+				contains(permissionChecker, userId, ActionKeys.VIEW);
+	%>
 
-<p><a href="<%= editGreetingURL %>">Edit greeting</a></p>
+	<c:if test="<%= hasViewPermission %>">
+		<portlet:actionURL var="allowUserURL" name="/authorize/allow_user">
+			<portlet:param name="mvcActionCommand" value="/authorize/allow_user" />
+			<portlet:param name="clientID" value="<%= clientID %>" />
+			<portlet:param name="p_u_i_d" value="<%= String.valueOf(userId) %>" />
+			<portlet:param name="redirect" value="<%= redirectURI %>" />
+			<portlet:param name="scope" value="<%= scope %>" />
+		</portlet:actionURL>
+
+		<liferay-ui:icon message="Allow" url="<%= allowUserURL %>" />
+
+		<portlet:renderURL var="denyUserURL">
+			<portlet:param name="mvcActionCommandName"
+						   value="/authorize/deny_user" />
+			<portlet:param name="redirect" value="<%= redirectURI %>" />
+			<portlet:param name="p_u_i_d" value="<%= String.valueOf(userId) %>" />
+		</portlet:renderURL>
+
+		<liferay-ui:icon message="Deny" url="<%= denyUserURL %>" />
+	</c:if>
+</liferay-ui:icon-menu>

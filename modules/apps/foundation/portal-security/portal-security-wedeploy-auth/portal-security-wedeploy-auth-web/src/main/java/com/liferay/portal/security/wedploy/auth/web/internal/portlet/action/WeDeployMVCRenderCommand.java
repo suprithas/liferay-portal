@@ -12,37 +12,35 @@
  * details.
  */
 
-package com.liferay.wiki.web.internal.portlet.action;
+package com.liferay.portal.security.wedploy.auth.web.internal.portlet.action;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
-import com.liferay.wiki.constants.WikiPortletKeys;
+import com.liferay.portal.security.wedploy.auth.web.internal.constants.WeDeployAuthPortletKeys;
+import org.osgi.service.component.annotations.Component;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import org.osgi.service.component.annotations.Component;
-
 /**
- * @author Iván Zaera
+ * @author Supritha Sundaram
  */
 @Component(
 	immediate = true,
 	property = {
-		"javax.portlet.name=" + WikiPortletKeys.WIKI,
-		"javax.portlet.name=" + WikiPortletKeys.WIKI_DISPLAY,
-		"mvc.command.name=/wiki/view_pages"
+		"javax.portlet.name=" + WeDeployAuthPortletKeys.WEDEPLOY_VIEW,
+		"mvc.command.name=/","mvc.command.name=/view"
 	},
 	service = MVCRenderCommand.class
 )
-public class ViewAllPagesMVCRenderCommand implements MVCRenderCommand {
+public class WeDeployMVCRenderCommand implements MVCRenderCommand {
 
 	@Override
 	public String render(
 			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws PortletException {
+			throws PortletException {
 
-		return ActionUtil.viewNode(renderRequest, "/wiki/view_all_pages.jsp");
+		return "/view.jsp";
 	}
 
 }

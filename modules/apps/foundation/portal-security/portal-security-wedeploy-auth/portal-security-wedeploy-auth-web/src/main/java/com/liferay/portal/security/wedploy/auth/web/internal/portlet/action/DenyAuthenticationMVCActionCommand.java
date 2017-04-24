@@ -16,9 +16,6 @@ package com.liferay.portal.security.wedploy.auth.web.internal.portlet.action;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextFactory;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.security.wedploy.auth.web.internal.constants.WeDeployAuthPortletKeys;
 import org.osgi.service.component.annotations.Component;
 
@@ -31,7 +28,7 @@ import javax.portlet.ActionResponse;
 @Component(
 	property = {
 		"javax.portlet.name=" + WeDeployAuthPortletKeys.WEDEPLOY_VIEW,
-		"mvc.command.name=/authorize/allow_user"
+		"mvc.command.name=/authorize/deny_user"
 	},
 	service = MVCActionCommand.class
 )
@@ -42,24 +39,5 @@ public class DenyAuthenticationMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String className = ParamUtil.getString(actionRequest, "className");
-		long classPK = ParamUtil.getLong(actionRequest, "classPK");
-		String reporterEmailAddress = ParamUtil.getString(
-			actionRequest, "reporterEmailAddress");
-		long reportedUserId = ParamUtil.getLong(
-			actionRequest, "reportedUserId");
-		String contentTitle = ParamUtil.getString(
-			actionRequest, "contentTitle");
-		String contentURL = ParamUtil.getString(actionRequest, "contentURL");
-		String reason = ParamUtil.getString(actionRequest, "reason");
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			"com.liferay.portlet.flags.model.FlagsEntry", actionRequest);
-
-				actionResponse.setRenderParameter("mvcPath", "authorize.jsp");
 	}
-
-
-	//private FlagsEntryService _flagsEntryService;
-
 }

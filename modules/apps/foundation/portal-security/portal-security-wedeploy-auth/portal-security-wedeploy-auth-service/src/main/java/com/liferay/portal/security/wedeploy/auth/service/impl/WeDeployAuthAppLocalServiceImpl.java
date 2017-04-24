@@ -24,16 +24,12 @@ import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp;
-import com.liferay.portal.security.wedeploy.auth.service.WeDeployAuthAppLocalService;
 import com.liferay.portal.security.wedeploy.auth.service.base.WeDeployAuthAppLocalServiceBaseImpl;
 import com.liferay.portal.security.wedeploy.auth.service.persistence.WeDeployAuthAppPersistence;
-import com.liferay.portal.security.wedeploy.auth.service.persistence.impl.WeDeployAuthAppPersistenceImpl;
-
-import org.springframework.security.oauth2.provider.token.;
 
 import java.util.Date;
 
-import static aQute.bnd.annotation.headers.Category.database;
+//import org.springframework.security.oauth2.provider.token.;
 
 /**
  * The implementation of the wedeploy auth app local service.
@@ -58,43 +54,10 @@ public class WeDeployAuthAppLocalServiceImpl
 	 * Never reference this class directly. Always use {@link com.liferay.portal.security.wedeploy.auth.service.WedeployAuthAppLocalServiceUtil} to access the wedeploy auth app local service.
 	 */
 
-	/**
-	 * Returns the authorization code.
-	 *
-	 * @return authorization code
-	 */
-	public String authorize(String clientId, String clientSecret)
-			throws PortalException, SystemException {
-
-		WeDeployAuthApp weDeployAuthApp =
-				_weDeployAuthAppPersistence.fetchByClientId(clientId);
-
-		if (weDeployAuthApp == null) {
-			//continue;
-		}
-		if (!clientSecret.equalsIgnoreCase(weDeployAuthApp.getClientSecret())) {
-			//continue;
-		}
-
-
-		return _getAuthorizationCode(clientId, clientSecret);
-	}
-
-	/**
-	 * Returns the request token.
-	 *
-	 * @return request token
-	 */
-	public void token(String authorizationCode) {
-
-	}
-
-	public WeDeployAuthApp addClient(
+	public WeDeployAuthApp addApplicationClient(
 			long userId, String name, long companyId,
 			ServiceContext serviceContext)
 			throws PortalException, SystemException {
-
-		// OAuth application
 
 		User user = userPersistence.findByPrimaryKey(userId);
 		Date now = new Date();
@@ -131,28 +94,48 @@ public class WeDeployAuthAppLocalServiceImpl
 		return weDeployAuthApp;
 	}
 
-	private String _getAuthorizationCode(String clientId, String clientSecret) {
-		String authorizationCode = randomizeToken(clientSecret);
-		/*OAuthASResponse.OAuthAuthorizationResponseBuilder builder =
-				OAuthASResponse.authorizationResponse(request,
-						HttpServletResponse.SC_FOUND);
+	/**
+	 * Returns the authorization code.
+	 *
+	 * @return authorization code
+	 */
+	public String generateAuthorizationCode(String clientId)
+			throws PortalException, SystemException {
 
-		// 1
-		if (responseType.equals(ResponseType.CODE.toString())) {
-			final String authorizationCode =
-					oauthIssuerImpl.authorizationCode();
-			database.addAuthCode(authorizationCode);
-			builder.setCode(authorizationCode);
-		}*/
+		return _getAuthorizationCode(clientId);
+	}
 
+	/**
+	 * Returns the access token.
+	 *
+	 * @return access token
+	 */
+	public String generateAccessToken(String clientId, String clientSecret,
+									 String
+			authorizationCode) {
 
+		WeDeployAuthApp weDeployAuthApp =
+				_weDeployAuthAppPersistence.fetchByClientId(clientId);
 
-		//_put(token, oAuthAccessor);
+		if (weDeployAuthApp == null) {
+			//generate client not found error
+		}
+
+		if (!clientSecret.equalsIgnoreCase(weDeployAuthApp.getClientSecret())) {
+			//generate secret does not match error
+		}
+
+		return randomizeToken(clientId.concat(authorizationCode));
+	}
+
+	private String _getAuthorizationCode(String clientId) {
+
+		String authorizationCode = randomizeToken(clientId);
 
 		return authorizationCode;
 	}
 
-	public String randomizeToken(String token) {
+	private String randomizeToken(String token) {
 		return DigesterUtil.digestHex(
 				Digester.MD5, token, PwdGenerator.getPassword());
 	}
