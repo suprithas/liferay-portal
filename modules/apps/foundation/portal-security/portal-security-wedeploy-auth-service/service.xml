@@ -53,7 +53,5 @@
 		<column name="token" type="String" />
 		<column name="type" type="int" />
 
-		<!-- Finder methods -->
-
 	</entity>
 </service-builder>

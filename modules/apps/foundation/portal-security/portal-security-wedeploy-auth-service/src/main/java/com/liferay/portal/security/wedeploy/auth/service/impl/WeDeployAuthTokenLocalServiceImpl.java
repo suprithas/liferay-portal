@@ -18,6 +18,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.Digester;
+import com.liferay.portal.kernel.util.DigesterUtil;
+import com.liferay.portal.kernel.util.PwdGenerator;
+import com.liferay.portal.security.wedeploy.auth.constants.WeDeployAuthTokenConstants;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken;
 import com.liferay.portal.security.wedeploy.auth.service.base.WeDeployAuthTokenLocalServiceBaseImpl;
 
@@ -28,11 +32,7 @@ import java.util.Date;
  */
 public class WeDeployAuthTokenLocalServiceImpl
 	extends WeDeployAuthTokenLocalServiceBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.portal.security.wedeploy.auth.service.WeDeployAuthTokenLocalServiceUtil} to access the we deploy auth token local service.
-	 */
+
 	public WeDeployAuthToken addWeDeployAuthToken(
 			long userId, String token, int type,
 			long companyId, ServiceContext serviceContext)
@@ -47,20 +47,54 @@ public class WeDeployAuthTokenLocalServiceImpl
 			weDeployAuthTokenPersistence.create(weDeployAuthTokenId);
 
 		weDeployAuthToken.setCompanyId(user.getCompanyId());
+		weDeployAuthToken.setToken(token);
 		weDeployAuthToken.setUserId(user.getUserId());
 		weDeployAuthToken.setUserName(user.getFullName());
 		weDeployAuthToken.setCreateDate(serviceContext.getCreateDate(date));
 		weDeployAuthToken.setModifiedDate(serviceContext.getModifiedDate(date));
-		weDeployAuthToken.setToken(token);
 		weDeployAuthToken.setType(type);
 
 		weDeployAuthTokenPersistence.update(weDeployAuthToken);
 
 		// Resources
 
-		resourceLocalService.addModelResources(weDeployAuthToken,
-				serviceContext);
+		resourceLocalService.addModelResources(
+			weDeployAuthToken, serviceContext);
 
 		return weDeployAuthToken;
 	}
+
+	public WeDeployAuthToken addWeDeployAuthorizationCode(
+			String clientId, long userId, long companyId,
+			ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		String token = randomizeToken(clientId);
+
+		WeDeployAuthToken weDeployAuthToken= addWeDeployAuthToken(
+			userId, token, WeDeployAuthTokenConstants.TOKEN_TYPE_REQUEST,
+			companyId, serviceContext);
+
+		return weDeployAuthToken;
+	}
+
+	public WeDeployAuthToken addWeDeployAccessToken(
+			String clientId, String clientSecret, String authorizationCode,
+			long userId, long companyId, ServiceContext serviceContext)
+		throws PortalException, SystemException {
+
+		String token = randomizeToken(clientId.concat(authorizationCode));
+
+		WeDeployAuthToken weDeployAuthToken= addWeDeployAuthToken(
+			userId, token, WeDeployAuthTokenConstants.TOKEN_TYPE_ACCESS,
+			companyId, new ServiceContext());
+
+		return weDeployAuthToken;
+	}
+
+	private static String randomizeToken(String token) {
+		return DigesterUtil.digestHex(
+			Digester.MD5, token, PwdGenerator.getPassword());
+	}
+
 }

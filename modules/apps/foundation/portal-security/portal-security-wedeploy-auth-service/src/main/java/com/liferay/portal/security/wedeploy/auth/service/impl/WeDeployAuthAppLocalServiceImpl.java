@@ -31,13 +31,8 @@ import java.util.Date;
  * @author Supritha Sundaram
  */
 public class WeDeployAuthAppLocalServiceImpl
-		extends WeDeployAuthAppLocalServiceBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. Always use {@link com.liferay.portal.security.wedeploy.auth.service.WedeployAuthAppLocalServiceUtil} to access the wedeploy auth app local service.
-	 */
-
+	extends WeDeployAuthAppLocalServiceBaseImpl {
+	
 	public WeDeployAuthApp addWeDeployAuthApp(
 			long userId, String name, long companyId,
 			ServiceContext serviceContext)
@@ -61,6 +56,7 @@ public class WeDeployAuthAppLocalServiceImpl
 		String clientId = PortalUUIDUtil.generate();
 
 		weDeployAuthApp.setClientId(clientId);
+
 		weDeployAuthApp.setClientSecret(randomizeToken(clientId));
 
 		weDeployAuthAppPersistence.update(weDeployAuthApp);
@@ -74,6 +70,7 @@ public class WeDeployAuthAppLocalServiceImpl
 
 	private String randomizeToken(String token) {
 		return DigesterUtil.digestHex(
-				Digester.MD5, token, PwdGenerator.getPassword());
+			Digester.MD5, token, PwdGenerator.getPassword());
 	}
+
 }
