@@ -79,6 +79,15 @@ public class WeDeployAuthAppLocalServiceUtil {
 		return getService().addWeDeployAuthApp(weDeployAuthApp);
 	}
 
+	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp addWeDeployAuthApp(
+		long userId, java.lang.String name, long companyId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addWeDeployAuthApp(userId, name, companyId, serviceContext);
+	}
+
 	/**
 	* Creates a new we deploy auth app with the primary key. Does not add the we deploy auth app to the database.
 	*
