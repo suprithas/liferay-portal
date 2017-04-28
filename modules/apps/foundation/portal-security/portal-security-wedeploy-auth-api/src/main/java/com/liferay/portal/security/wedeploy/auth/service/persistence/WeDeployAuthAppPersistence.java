@@ -41,6 +41,96 @@ public interface WeDeployAuthAppPersistence extends BasePersistence<WeDeployAuth
 	 */
 
 	/**
+	* Returns the we deploy auth app where companyId = &#63; or throws a {@link NoSuchAppException} if it could not be found.
+	*
+	* @param companyId the company ID
+	* @return the matching we deploy auth app
+	* @throws NoSuchAppException if a matching we deploy auth app could not be found
+	*/
+	public WeDeployAuthApp findByCompanyId(long companyId)
+		throws NoSuchAppException;
+
+	/**
+	* Returns the we deploy auth app where companyId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param companyId the company ID
+	* @return the matching we deploy auth app, or <code>null</code> if a matching we deploy auth app could not be found
+	*/
+	public WeDeployAuthApp fetchByCompanyId(long companyId);
+
+	/**
+	* Returns the we deploy auth app where companyId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param companyId the company ID
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching we deploy auth app, or <code>null</code> if a matching we deploy auth app could not be found
+	*/
+	public WeDeployAuthApp fetchByCompanyId(long companyId,
+		boolean retrieveFromCache);
+
+	/**
+	* Removes the we deploy auth app where companyId = &#63; from the database.
+	*
+	* @param companyId the company ID
+	* @return the we deploy auth app that was removed
+	*/
+	public WeDeployAuthApp removeByCompanyId(long companyId)
+		throws NoSuchAppException;
+
+	/**
+	* Returns the number of we deploy auth apps where companyId = &#63;.
+	*
+	* @param companyId the company ID
+	* @return the number of matching we deploy auth apps
+	*/
+	public int countByCompanyId(long companyId);
+
+	/**
+	* Returns the we deploy auth app where clientId = &#63; or throws a {@link NoSuchAppException} if it could not be found.
+	*
+	* @param clientId the client ID
+	* @return the matching we deploy auth app
+	* @throws NoSuchAppException if a matching we deploy auth app could not be found
+	*/
+	public WeDeployAuthApp findByClientId(java.lang.String clientId)
+		throws NoSuchAppException;
+
+	/**
+	* Returns the we deploy auth app where clientId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param clientId the client ID
+	* @return the matching we deploy auth app, or <code>null</code> if a matching we deploy auth app could not be found
+	*/
+	public WeDeployAuthApp fetchByClientId(java.lang.String clientId);
+
+	/**
+	* Returns the we deploy auth app where clientId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param clientId the client ID
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching we deploy auth app, or <code>null</code> if a matching we deploy auth app could not be found
+	*/
+	public WeDeployAuthApp fetchByClientId(java.lang.String clientId,
+		boolean retrieveFromCache);
+
+	/**
+	* Removes the we deploy auth app where clientId = &#63; from the database.
+	*
+	* @param clientId the client ID
+	* @return the we deploy auth app that was removed
+	*/
+	public WeDeployAuthApp removeByClientId(java.lang.String clientId)
+		throws NoSuchAppException;
+
+	/**
+	* Returns the number of we deploy auth apps where clientId = &#63;.
+	*
+	* @param clientId the client ID
+	* @return the number of matching we deploy auth apps
+	*/
+	public int countByClientId(java.lang.String clientId);
+
+	/**
 	* Caches the we deploy auth app in the entity cache if it is enabled.
 	*
 	* @param weDeployAuthApp the we deploy auth app
