@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.security.wedeploy.auth.constants.WeDeployAuthTokenConstants;
+import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken;
 import com.liferay.portal.security.wedeploy.auth.service.base.WeDeployAuthTokenLocalServiceBaseImpl;
 
@@ -44,8 +45,8 @@ public class WeDeployAuthTokenLocalServiceImpl
 			PwdGenerator.getPassword());
 
 		return addWeDeployAuthToken(
-			userId, clientId, token, WeDeployAuthTokenConstants.TYPE_ACCESS,
-			new ServiceContext());
+			userId, clientId, token,
+			WeDeployAuthTokenConstants.TOKEN_TYPE_ACCESS, new ServiceContext());
 	}
 
 	public WeDeployAuthToken addAuthorizationWeDeployAuthToken(
@@ -57,7 +58,7 @@ public class WeDeployAuthTokenLocalServiceImpl
 
 		return addWeDeployAuthToken(
 			userId, clientId, token,
-			WeDeployAuthTokenConstants.TYPE_AUTHORIZATION,
+			WeDeployAuthTokenConstants.TOKEN_TYPE_AUTHORIZATION,
 			new ServiceContext());
 	}
 
