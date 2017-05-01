@@ -177,6 +177,21 @@ public interface WeDeployAuthTokenModel extends AuditedModel,
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
+	 * Returns the client ID of this we deploy auth token.
+	 *
+	 * @return the client ID of this we deploy auth token
+	 */
+	@AutoEscape
+	public String getClientId();
+
+	/**
+	 * Sets the client ID of this we deploy auth token.
+	 *
+	 * @param clientId the client ID of this we deploy auth token
+	 */
+	public void setClientId(String clientId);
+
+	/**
 	 * Returns the token of this we deploy auth token.
 	 *
 	 * @return the token of this we deploy auth token

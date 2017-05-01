@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.dao.orm.EntityCache;
 import com.liferay.portal.kernel.dao.orm.FinderCache;
 import com.liferay.portal.kernel.dao.orm.FinderPath;
 import com.liferay.portal.kernel.dao.orm.Query;
+import com.liferay.portal.kernel.dao.orm.QueryPos;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.log.Log;
@@ -34,6 +35,7 @@ import com.liferay.portal.kernel.util.ReflectionUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.security.wedeploy.auth.exception.NoSuchTokenException;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken;
 import com.liferay.portal.security.wedeploy.auth.model.impl.WeDeployAuthTokenImpl;
@@ -52,6 +54,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -90,6 +93,523 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	public static final FinderPath FINDER_PATH_COUNT_ALL = new FinderPath(WeDeployAuthTokenModelImpl.ENTITY_CACHE_ENABLED,
 			WeDeployAuthTokenModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countAll", new String[0]);
+	public static final FinderPath FINDER_PATH_FETCH_BY_CLIENTID = new FinderPath(WeDeployAuthTokenModelImpl.ENTITY_CACHE_ENABLED,
+			WeDeployAuthTokenModelImpl.FINDER_CACHE_ENABLED,
+			WeDeployAuthTokenImpl.class, FINDER_CLASS_NAME_ENTITY,
+			"fetchByClientId", new String[] { String.class.getName() },
+			WeDeployAuthTokenModelImpl.CLIENTID_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_CLIENTID = new FinderPath(WeDeployAuthTokenModelImpl.ENTITY_CACHE_ENABLED,
+			WeDeployAuthTokenModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByClientId",
+			new String[] { String.class.getName() });
+
+	/**
+	 * Returns the we deploy auth token where clientId = &#63; or throws a {@link NoSuchTokenException} if it could not be found.
+	 *
+	 * @param clientId the client ID
+	 * @return the matching we deploy auth token
+	 * @throws NoSuchTokenException if a matching we deploy auth token could not be found
+	 */
+	@Override
+	public WeDeployAuthToken findByClientId(String clientId)
+		throws NoSuchTokenException {
+		WeDeployAuthToken weDeployAuthToken = fetchByClientId(clientId);
+
+		if (weDeployAuthToken == null) {
+			StringBundler msg = new StringBundler(4);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("clientId=");
+			msg.append(clientId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(msg.toString());
+			}
+
+			throw new NoSuchTokenException(msg.toString());
+		}
+
+		return weDeployAuthToken;
+	}
+
+	/**
+	 * Returns the we deploy auth token where clientId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param clientId the client ID
+	 * @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	 */
+	@Override
+	public WeDeployAuthToken fetchByClientId(String clientId) {
+		return fetchByClientId(clientId, true);
+	}
+
+	/**
+	 * Returns the we deploy auth token where clientId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param clientId the client ID
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	 */
+	@Override
+	public WeDeployAuthToken fetchByClientId(String clientId,
+		boolean retrieveFromCache) {
+		Object[] finderArgs = new Object[] { clientId };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = finderCache.getResult(FINDER_PATH_FETCH_BY_CLIENTID,
+					finderArgs, this);
+		}
+
+		if (result instanceof WeDeployAuthToken) {
+			WeDeployAuthToken weDeployAuthToken = (WeDeployAuthToken)result;
+
+			if (!Objects.equals(clientId, weDeployAuthToken.getClientId())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_SELECT_WEDEPLOYAUTHTOKEN_WHERE);
+
+			boolean bindClientId = false;
+
+			if (clientId == null) {
+				query.append(_FINDER_COLUMN_CLIENTID_CLIENTID_1);
+			}
+			else if (clientId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_CLIENTID_CLIENTID_3);
+			}
+			else {
+				bindClientId = true;
+
+				query.append(_FINDER_COLUMN_CLIENTID_CLIENTID_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindClientId) {
+					qPos.add(clientId);
+				}
+
+				List<WeDeployAuthToken> list = q.list();
+
+				if (list.isEmpty()) {
+					finderCache.putResult(FINDER_PATH_FETCH_BY_CLIENTID,
+						finderArgs, list);
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"WeDeployAuthTokenPersistenceImpl.fetchByClientId(String, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					WeDeployAuthToken weDeployAuthToken = list.get(0);
+
+					result = weDeployAuthToken;
+
+					cacheResult(weDeployAuthToken);
+
+					if ((weDeployAuthToken.getClientId() == null) ||
+							!weDeployAuthToken.getClientId().equals(clientId)) {
+						finderCache.putResult(FINDER_PATH_FETCH_BY_CLIENTID,
+							finderArgs, weDeployAuthToken);
+					}
+				}
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_FETCH_BY_CLIENTID,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (WeDeployAuthToken)result;
+		}
+	}
+
+	/**
+	 * Removes the we deploy auth token where clientId = &#63; from the database.
+	 *
+	 * @param clientId the client ID
+	 * @return the we deploy auth token that was removed
+	 */
+	@Override
+	public WeDeployAuthToken removeByClientId(String clientId)
+		throws NoSuchTokenException {
+		WeDeployAuthToken weDeployAuthToken = findByClientId(clientId);
+
+		return remove(weDeployAuthToken);
+	}
+
+	/**
+	 * Returns the number of we deploy auth tokens where clientId = &#63;.
+	 *
+	 * @param clientId the client ID
+	 * @return the number of matching we deploy auth tokens
+	 */
+	@Override
+	public int countByClientId(String clientId) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_CLIENTID;
+
+		Object[] finderArgs = new Object[] { clientId };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_WEDEPLOYAUTHTOKEN_WHERE);
+
+			boolean bindClientId = false;
+
+			if (clientId == null) {
+				query.append(_FINDER_COLUMN_CLIENTID_CLIENTID_1);
+			}
+			else if (clientId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_CLIENTID_CLIENTID_3);
+			}
+			else {
+				bindClientId = true;
+
+				query.append(_FINDER_COLUMN_CLIENTID_CLIENTID_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindClientId) {
+					qPos.add(clientId);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_CLIENTID_CLIENTID_1 = "weDeployAuthToken.clientId IS NULL";
+	private static final String _FINDER_COLUMN_CLIENTID_CLIENTID_2 = "weDeployAuthToken.clientId = ?";
+	private static final String _FINDER_COLUMN_CLIENTID_CLIENTID_3 = "(weDeployAuthToken.clientId IS NULL OR weDeployAuthToken.clientId = '')";
+	public static final FinderPath FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE = new FinderPath(WeDeployAuthTokenModelImpl.ENTITY_CACHE_ENABLED,
+			WeDeployAuthTokenModelImpl.FINDER_CACHE_ENABLED,
+			WeDeployAuthTokenImpl.class, FINDER_CLASS_NAME_ENTITY,
+			"fetchByClientIdAndTokenType",
+			new String[] { String.class.getName(), Integer.class.getName() },
+			WeDeployAuthTokenModelImpl.CLIENTID_COLUMN_BITMASK |
+			WeDeployAuthTokenModelImpl.TYPE_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_CLIENTIDANDTOKENTYPE = new FinderPath(WeDeployAuthTokenModelImpl.ENTITY_CACHE_ENABLED,
+			WeDeployAuthTokenModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByClientIdAndTokenType",
+			new String[] { String.class.getName(), Integer.class.getName() });
+
+	/**
+	 * Returns the we deploy auth token where clientId = &#63; and type = &#63; or throws a {@link NoSuchTokenException} if it could not be found.
+	 *
+	 * @param clientId the client ID
+	 * @param type the type
+	 * @return the matching we deploy auth token
+	 * @throws NoSuchTokenException if a matching we deploy auth token could not be found
+	 */
+	@Override
+	public WeDeployAuthToken findByClientIdAndTokenType(String clientId,
+		int type) throws NoSuchTokenException {
+		WeDeployAuthToken weDeployAuthToken = fetchByClientIdAndTokenType(clientId,
+				type);
+
+		if (weDeployAuthToken == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("clientId=");
+			msg.append(clientId);
+
+			msg.append(", type=");
+			msg.append(type);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(msg.toString());
+			}
+
+			throw new NoSuchTokenException(msg.toString());
+		}
+
+		return weDeployAuthToken;
+	}
+
+	/**
+	 * Returns the we deploy auth token where clientId = &#63; and type = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param clientId the client ID
+	 * @param type the type
+	 * @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	 */
+	@Override
+	public WeDeployAuthToken fetchByClientIdAndTokenType(String clientId,
+		int type) {
+		return fetchByClientIdAndTokenType(clientId, type, true);
+	}
+
+	/**
+	 * Returns the we deploy auth token where clientId = &#63; and type = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param clientId the client ID
+	 * @param type the type
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	 */
+	@Override
+	public WeDeployAuthToken fetchByClientIdAndTokenType(String clientId,
+		int type, boolean retrieveFromCache) {
+		Object[] finderArgs = new Object[] { clientId, type };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = finderCache.getResult(FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE,
+					finderArgs, this);
+		}
+
+		if (result instanceof WeDeployAuthToken) {
+			WeDeployAuthToken weDeployAuthToken = (WeDeployAuthToken)result;
+
+			if (!Objects.equals(clientId, weDeployAuthToken.getClientId()) ||
+					(type != weDeployAuthToken.getType())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_SELECT_WEDEPLOYAUTHTOKEN_WHERE);
+
+			boolean bindClientId = false;
+
+			if (clientId == null) {
+				query.append(_FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_1);
+			}
+			else if (clientId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_3);
+			}
+			else {
+				bindClientId = true;
+
+				query.append(_FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_2);
+			}
+
+			query.append(_FINDER_COLUMN_CLIENTIDANDTOKENTYPE_TYPE_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindClientId) {
+					qPos.add(clientId);
+				}
+
+				qPos.add(type);
+
+				List<WeDeployAuthToken> list = q.list();
+
+				if (list.isEmpty()) {
+					finderCache.putResult(FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE,
+						finderArgs, list);
+				}
+				else {
+					if (list.size() > 1) {
+						Collections.sort(list, Collections.reverseOrder());
+
+						if (_log.isWarnEnabled()) {
+							_log.warn(
+								"WeDeployAuthTokenPersistenceImpl.fetchByClientIdAndTokenType(String, int, boolean) with parameters (" +
+								StringUtil.merge(finderArgs) +
+								") yields a result set with more than 1 result. This violates the logical unique restriction. There is no order guarantee on which result is returned by this finder.");
+						}
+					}
+
+					WeDeployAuthToken weDeployAuthToken = list.get(0);
+
+					result = weDeployAuthToken;
+
+					cacheResult(weDeployAuthToken);
+
+					if ((weDeployAuthToken.getClientId() == null) ||
+							!weDeployAuthToken.getClientId().equals(clientId) ||
+							(weDeployAuthToken.getType() != type)) {
+						finderCache.putResult(FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE,
+							finderArgs, weDeployAuthToken);
+					}
+				}
+			}
+			catch (Exception e) {
+				finderCache.removeResult(FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE,
+					finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		if (result instanceof List<?>) {
+			return null;
+		}
+		else {
+			return (WeDeployAuthToken)result;
+		}
+	}
+
+	/**
+	 * Removes the we deploy auth token where clientId = &#63; and type = &#63; from the database.
+	 *
+	 * @param clientId the client ID
+	 * @param type the type
+	 * @return the we deploy auth token that was removed
+	 */
+	@Override
+	public WeDeployAuthToken removeByClientIdAndTokenType(String clientId,
+		int type) throws NoSuchTokenException {
+		WeDeployAuthToken weDeployAuthToken = findByClientIdAndTokenType(clientId,
+				type);
+
+		return remove(weDeployAuthToken);
+	}
+
+	/**
+	 * Returns the number of we deploy auth tokens where clientId = &#63; and type = &#63;.
+	 *
+	 * @param clientId the client ID
+	 * @param type the type
+	 * @return the number of matching we deploy auth tokens
+	 */
+	@Override
+	public int countByClientIdAndTokenType(String clientId, int type) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_CLIENTIDANDTOKENTYPE;
+
+		Object[] finderArgs = new Object[] { clientId, type };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_WEDEPLOYAUTHTOKEN_WHERE);
+
+			boolean bindClientId = false;
+
+			if (clientId == null) {
+				query.append(_FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_1);
+			}
+			else if (clientId.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_3);
+			}
+			else {
+				bindClientId = true;
+
+				query.append(_FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_2);
+			}
+
+			query.append(_FINDER_COLUMN_CLIENTIDANDTOKENTYPE_TYPE_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				if (bindClientId) {
+					qPos.add(clientId);
+				}
+
+				qPos.add(type);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_1 = "weDeployAuthToken.clientId IS NULL AND ";
+	private static final String _FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_2 = "weDeployAuthToken.clientId = ? AND ";
+	private static final String _FINDER_COLUMN_CLIENTIDANDTOKENTYPE_CLIENTID_3 = "(weDeployAuthToken.clientId IS NULL OR weDeployAuthToken.clientId = '') AND ";
+	private static final String _FINDER_COLUMN_CLIENTIDANDTOKENTYPE_TYPE_2 = "weDeployAuthToken.type = ?";
 
 	public WeDeployAuthTokenPersistenceImpl() {
 		setModelClass(WeDeployAuthToken.class);
@@ -121,6 +641,14 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 		entityCache.putResult(WeDeployAuthTokenModelImpl.ENTITY_CACHE_ENABLED,
 			WeDeployAuthTokenImpl.class, weDeployAuthToken.getPrimaryKey(),
 			weDeployAuthToken);
+
+		finderCache.putResult(FINDER_PATH_FETCH_BY_CLIENTID,
+			new Object[] { weDeployAuthToken.getClientId() }, weDeployAuthToken);
+
+		finderCache.putResult(FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE,
+			new Object[] {
+				weDeployAuthToken.getClientId(), weDeployAuthToken.getType()
+			}, weDeployAuthToken);
 
 		weDeployAuthToken.resetOriginalValues();
 	}
@@ -175,6 +703,9 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		clearUniqueFindersCache((WeDeployAuthTokenModelImpl)weDeployAuthToken,
+			true);
 	}
 
 	@Override
@@ -185,6 +716,77 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 		for (WeDeployAuthToken weDeployAuthToken : weDeployAuthTokens) {
 			entityCache.removeResult(WeDeployAuthTokenModelImpl.ENTITY_CACHE_ENABLED,
 				WeDeployAuthTokenImpl.class, weDeployAuthToken.getPrimaryKey());
+
+			clearUniqueFindersCache((WeDeployAuthTokenModelImpl)weDeployAuthToken,
+				true);
+		}
+	}
+
+	protected void cacheUniqueFindersCache(
+		WeDeployAuthTokenModelImpl weDeployAuthTokenModelImpl) {
+		Object[] args = new Object[] { weDeployAuthTokenModelImpl.getClientId() };
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_CLIENTID, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_CLIENTID, args,
+			weDeployAuthTokenModelImpl, false);
+
+		args = new Object[] {
+				weDeployAuthTokenModelImpl.getClientId(),
+				weDeployAuthTokenModelImpl.getType()
+			};
+
+		finderCache.putResult(FINDER_PATH_COUNT_BY_CLIENTIDANDTOKENTYPE, args,
+			Long.valueOf(1), false);
+		finderCache.putResult(FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE, args,
+			weDeployAuthTokenModelImpl, false);
+	}
+
+	protected void clearUniqueFindersCache(
+		WeDeployAuthTokenModelImpl weDeployAuthTokenModelImpl,
+		boolean clearCurrent) {
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					weDeployAuthTokenModelImpl.getClientId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_CLIENTID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_CLIENTID, args);
+		}
+
+		if ((weDeployAuthTokenModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CLIENTID.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] {
+					weDeployAuthTokenModelImpl.getOriginalClientId()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_CLIENTID, args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_CLIENTID, args);
+		}
+
+		if (clearCurrent) {
+			Object[] args = new Object[] {
+					weDeployAuthTokenModelImpl.getClientId(),
+					weDeployAuthTokenModelImpl.getType()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_CLIENTIDANDTOKENTYPE,
+				args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE,
+				args);
+		}
+
+		if ((weDeployAuthTokenModelImpl.getColumnBitmask() &
+				FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE.getColumnBitmask()) != 0) {
+			Object[] args = new Object[] {
+					weDeployAuthTokenModelImpl.getOriginalClientId(),
+					weDeployAuthTokenModelImpl.getOriginalType()
+				};
+
+			finderCache.removeResult(FINDER_PATH_COUNT_BY_CLIENTIDANDTOKENTYPE,
+				args);
+			finderCache.removeResult(FINDER_PATH_FETCH_BY_CLIENTIDANDTOKENTYPE,
+				args);
 		}
 	}
 
@@ -346,7 +948,11 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 
 		finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 
-		if (isNew) {
+		if (!WeDeployAuthTokenModelImpl.COLUMN_BITMASK_ENABLED) {
+			finderCache.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+		}
+		else
+		 if (isNew) {
 			finderCache.removeResult(FINDER_PATH_COUNT_ALL, FINDER_ARGS_EMPTY);
 			finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_ALL,
 				FINDER_ARGS_EMPTY);
@@ -355,6 +961,9 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 		entityCache.putResult(WeDeployAuthTokenModelImpl.ENTITY_CACHE_ENABLED,
 			WeDeployAuthTokenImpl.class, weDeployAuthToken.getPrimaryKey(),
 			weDeployAuthToken, false);
+
+		clearUniqueFindersCache(weDeployAuthTokenModelImpl, false);
+		cacheUniqueFindersCache(weDeployAuthTokenModelImpl);
 
 		weDeployAuthToken.resetOriginalValues();
 
@@ -378,6 +987,7 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 		weDeployAuthTokenImpl.setUserName(weDeployAuthToken.getUserName());
 		weDeployAuthTokenImpl.setCreateDate(weDeployAuthToken.getCreateDate());
 		weDeployAuthTokenImpl.setModifiedDate(weDeployAuthToken.getModifiedDate());
+		weDeployAuthTokenImpl.setClientId(weDeployAuthToken.getClientId());
 		weDeployAuthTokenImpl.setToken(weDeployAuthToken.getToken());
 		weDeployAuthTokenImpl.setType(weDeployAuthToken.getType());
 
@@ -796,9 +1406,12 @@ public class WeDeployAuthTokenPersistenceImpl extends BasePersistenceImpl<WeDepl
 	protected FinderCache finderCache;
 	private static final String _SQL_SELECT_WEDEPLOYAUTHTOKEN = "SELECT weDeployAuthToken FROM WeDeployAuthToken weDeployAuthToken";
 	private static final String _SQL_SELECT_WEDEPLOYAUTHTOKEN_WHERE_PKS_IN = "SELECT weDeployAuthToken FROM WeDeployAuthToken weDeployAuthToken WHERE weDeployAuthTokenId IN (";
+	private static final String _SQL_SELECT_WEDEPLOYAUTHTOKEN_WHERE = "SELECT weDeployAuthToken FROM WeDeployAuthToken weDeployAuthToken WHERE ";
 	private static final String _SQL_COUNT_WEDEPLOYAUTHTOKEN = "SELECT COUNT(weDeployAuthToken) FROM WeDeployAuthToken weDeployAuthToken";
+	private static final String _SQL_COUNT_WEDEPLOYAUTHTOKEN_WHERE = "SELECT COUNT(weDeployAuthToken) FROM WeDeployAuthToken weDeployAuthToken WHERE ";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "weDeployAuthToken.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No WeDeployAuthToken exists with the primary key ";
+	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No WeDeployAuthToken exists with the key {";
 	private static final Log _log = LogFactoryUtil.getLog(WeDeployAuthTokenPersistenceImpl.class);
 	private static final Set<String> _badColumnNames = SetUtil.fromArray(new String[] {
 				"type"

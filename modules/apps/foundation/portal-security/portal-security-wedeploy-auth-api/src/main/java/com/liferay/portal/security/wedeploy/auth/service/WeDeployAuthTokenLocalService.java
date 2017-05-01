@@ -80,10 +80,14 @@ public interface WeDeployAuthTokenLocalService extends BaseLocalService,
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
 		throws PortalException;
 
-	public WeDeployAuthToken addWeDeployAccessToken(java.lang.String clientId,
-		java.lang.String clientSecret, java.lang.String authorizationCode,
-		long userId, long companyId, ServiceContext serviceContext)
-		throws PortalException, SystemException;
+	public WeDeployAuthToken addAccessWeDeployAuthToken(long companyId,
+		long userId, java.lang.String clientId, java.lang.String clientSecret,
+		java.lang.String requestToken, int type, ServiceContext serviceContext)
+		throws PortalException;
+
+	public WeDeployAuthToken addRequestWeDeployAuthToken(long companyId,
+		long userId, java.lang.String clientId, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	* Adds the we deploy auth token to the database. Also notifies the appropriate model listeners.
@@ -95,13 +99,9 @@ public interface WeDeployAuthTokenLocalService extends BaseLocalService,
 	public WeDeployAuthToken addWeDeployAuthToken(
 		WeDeployAuthToken weDeployAuthToken);
 
-	public WeDeployAuthToken addWeDeployAuthToken(long userId,
-		java.lang.String token, int type, long companyId,
-		ServiceContext serviceContext) throws PortalException, SystemException;
-
-	public WeDeployAuthToken addWeDeployAuthorizationCode(
-		java.lang.String clientId, long userId, long companyId,
-		ServiceContext serviceContext) throws PortalException, SystemException;
+	public WeDeployAuthToken addWeDeployAuthToken(long companyId, long userId,
+		java.lang.String clientId, java.lang.String token, int type,
+		ServiceContext serviceContext) throws PortalException;
 
 	/**
 	* Creates a new we deploy auth token with the primary key. Does not add the we deploy auth token to the database.

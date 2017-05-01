@@ -89,9 +89,9 @@ public interface WeDeployAuthAppLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.REINDEX)
 	public WeDeployAuthApp addWeDeployAuthApp(WeDeployAuthApp weDeployAuthApp);
 
-	public WeDeployAuthApp addWeDeployAuthApp(long userId,
-		java.lang.String name, long companyId, ServiceContext serviceContext)
-		throws PortalException, SystemException;
+	public WeDeployAuthApp addWeDeployAuthApp(long companyId, long userId,
+		java.lang.String name, ServiceContext serviceContext)
+		throws PortalException;
 
 	/**
 	* Creates a new we deploy auth app with the primary key. Does not add the we deploy auth app to the database.

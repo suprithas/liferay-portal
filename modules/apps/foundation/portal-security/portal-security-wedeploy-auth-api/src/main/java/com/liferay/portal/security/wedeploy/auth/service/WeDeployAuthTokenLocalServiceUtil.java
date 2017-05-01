@@ -68,15 +68,23 @@ public class WeDeployAuthTokenLocalServiceUtil {
 		return getService().getPersistedModel(primaryKeyObj);
 	}
 
-	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addWeDeployAccessToken(
-		java.lang.String clientId, java.lang.String clientSecret,
-		java.lang.String authorizationCode, long userId, long companyId,
+	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addAccessWeDeployAuthToken(
+		long companyId, long userId, java.lang.String clientId,
+		java.lang.String clientSecret, java.lang.String requestToken, int type,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .addWeDeployAccessToken(clientId, clientSecret,
-			authorizationCode, userId, companyId, serviceContext);
+				   .addAccessWeDeployAuthToken(companyId, userId, clientId,
+			clientSecret, requestToken, type, serviceContext);
+	}
+
+	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addRequestWeDeployAuthToken(
+		long companyId, long userId, java.lang.String clientId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addRequestWeDeployAuthToken(companyId, userId, clientId,
+			serviceContext);
 	}
 
 	/**
@@ -91,23 +99,13 @@ public class WeDeployAuthTokenLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addWeDeployAuthToken(
-		long userId, java.lang.String token, int type, long companyId,
+		long companyId, long userId, java.lang.String clientId,
+		java.lang.String token, int type,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .addWeDeployAuthToken(userId, token, type, companyId,
-			serviceContext);
-	}
-
-	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addWeDeployAuthorizationCode(
-		java.lang.String clientId, long userId, long companyId,
-		com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getService()
-				   .addWeDeployAuthorizationCode(clientId, userId, companyId,
-			serviceContext);
+				   .addWeDeployAuthToken(companyId, userId, clientId, token,
+			type, serviceContext);
 	}
 
 	/**

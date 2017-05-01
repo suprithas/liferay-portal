@@ -65,7 +65,7 @@ public class WeDeployAuthTokenCacheModel implements CacheModel<WeDeployAuthToken
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(17);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{weDeployAuthTokenId=");
 		sb.append(weDeployAuthTokenId);
@@ -79,6 +79,8 @@ public class WeDeployAuthTokenCacheModel implements CacheModel<WeDeployAuthToken
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
+		sb.append(", clientId=");
+		sb.append(clientId);
 		sb.append(", token=");
 		sb.append(token);
 		sb.append(", type=");
@@ -117,6 +119,13 @@ public class WeDeployAuthTokenCacheModel implements CacheModel<WeDeployAuthToken
 			weDeployAuthTokenImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
+		if (clientId == null) {
+			weDeployAuthTokenImpl.setClientId(StringPool.BLANK);
+		}
+		else {
+			weDeployAuthTokenImpl.setClientId(clientId);
+		}
+
 		if (token == null) {
 			weDeployAuthTokenImpl.setToken(StringPool.BLANK);
 		}
@@ -141,6 +150,7 @@ public class WeDeployAuthTokenCacheModel implements CacheModel<WeDeployAuthToken
 		userName = objectInput.readUTF();
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
+		clientId = objectInput.readUTF();
 		token = objectInput.readUTF();
 
 		type = objectInput.readInt();
@@ -165,6 +175,13 @@ public class WeDeployAuthTokenCacheModel implements CacheModel<WeDeployAuthToken
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
+		if (clientId == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(clientId);
+		}
+
 		if (token == null) {
 			objectOutput.writeUTF(StringPool.BLANK);
 		}
@@ -181,6 +198,7 @@ public class WeDeployAuthTokenCacheModel implements CacheModel<WeDeployAuthToken
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
+	public String clientId;
 	public String token;
 	public int type;
 }

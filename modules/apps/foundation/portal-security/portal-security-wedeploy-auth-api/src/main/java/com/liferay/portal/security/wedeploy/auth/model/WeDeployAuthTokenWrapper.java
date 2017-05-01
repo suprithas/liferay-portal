@@ -64,6 +64,7 @@ public class WeDeployAuthTokenWrapper implements WeDeployAuthToken,
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("clientId", getClientId());
 		attributes.put("token", getToken());
 		attributes.put("type", getType());
 
@@ -106,6 +107,12 @@ public class WeDeployAuthTokenWrapper implements WeDeployAuthToken,
 
 		if (modifiedDate != null) {
 			setModifiedDate(modifiedDate);
+		}
+
+		String clientId = (String)attributes.get("clientId");
+
+		if (clientId != null) {
+			setClientId(clientId);
 		}
 
 		String token = (String)attributes.get("token");
@@ -184,6 +191,16 @@ public class WeDeployAuthTokenWrapper implements WeDeployAuthToken,
 	@Override
 	public java.lang.Object clone() {
 		return new WeDeployAuthTokenWrapper((WeDeployAuthToken)_weDeployAuthToken.clone());
+	}
+
+	/**
+	* Returns the client ID of this we deploy auth token.
+	*
+	* @return the client ID of this we deploy auth token
+	*/
+	@Override
+	public java.lang.String getClientId() {
+		return _weDeployAuthToken.getClientId();
 	}
 
 	/**
@@ -294,6 +311,16 @@ public class WeDeployAuthTokenWrapper implements WeDeployAuthToken,
 	@Override
 	public void setCachedModel(boolean cachedModel) {
 		_weDeployAuthToken.setCachedModel(cachedModel);
+	}
+
+	/**
+	* Sets the client ID of this we deploy auth token.
+	*
+	* @param clientId the client ID of this we deploy auth token
+	*/
+	@Override
+	public void setClientId(java.lang.String clientId) {
+		_weDeployAuthToken.setClientId(clientId);
 	}
 
 	/**

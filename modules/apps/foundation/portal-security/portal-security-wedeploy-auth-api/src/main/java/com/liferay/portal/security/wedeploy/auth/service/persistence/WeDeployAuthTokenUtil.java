@@ -111,6 +111,127 @@ public class WeDeployAuthTokenUtil {
 	}
 
 	/**
+	* Returns the we deploy auth token where clientId = &#63; or throws a {@link NoSuchTokenException} if it could not be found.
+	*
+	* @param clientId the client ID
+	* @return the matching we deploy auth token
+	* @throws NoSuchTokenException if a matching we deploy auth token could not be found
+	*/
+	public static WeDeployAuthToken findByClientId(java.lang.String clientId)
+		throws com.liferay.portal.security.wedeploy.auth.exception.NoSuchTokenException {
+		return getPersistence().findByClientId(clientId);
+	}
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param clientId the client ID
+	* @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	*/
+	public static WeDeployAuthToken fetchByClientId(java.lang.String clientId) {
+		return getPersistence().fetchByClientId(clientId);
+	}
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param clientId the client ID
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	*/
+	public static WeDeployAuthToken fetchByClientId(java.lang.String clientId,
+		boolean retrieveFromCache) {
+		return getPersistence().fetchByClientId(clientId, retrieveFromCache);
+	}
+
+	/**
+	* Removes the we deploy auth token where clientId = &#63; from the database.
+	*
+	* @param clientId the client ID
+	* @return the we deploy auth token that was removed
+	*/
+	public static WeDeployAuthToken removeByClientId(java.lang.String clientId)
+		throws com.liferay.portal.security.wedeploy.auth.exception.NoSuchTokenException {
+		return getPersistence().removeByClientId(clientId);
+	}
+
+	/**
+	* Returns the number of we deploy auth tokens where clientId = &#63;.
+	*
+	* @param clientId the client ID
+	* @return the number of matching we deploy auth tokens
+	*/
+	public static int countByClientId(java.lang.String clientId) {
+		return getPersistence().countByClientId(clientId);
+	}
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; and type = &#63; or throws a {@link NoSuchTokenException} if it could not be found.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @return the matching we deploy auth token
+	* @throws NoSuchTokenException if a matching we deploy auth token could not be found
+	*/
+	public static WeDeployAuthToken findByClientIdAndTokenType(
+		java.lang.String clientId, int type)
+		throws com.liferay.portal.security.wedeploy.auth.exception.NoSuchTokenException {
+		return getPersistence().findByClientIdAndTokenType(clientId, type);
+	}
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; and type = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	*/
+	public static WeDeployAuthToken fetchByClientIdAndTokenType(
+		java.lang.String clientId, int type) {
+		return getPersistence().fetchByClientIdAndTokenType(clientId, type);
+	}
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; and type = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	*/
+	public static WeDeployAuthToken fetchByClientIdAndTokenType(
+		java.lang.String clientId, int type, boolean retrieveFromCache) {
+		return getPersistence()
+				   .fetchByClientIdAndTokenType(clientId, type,
+			retrieveFromCache);
+	}
+
+	/**
+	* Removes the we deploy auth token where clientId = &#63; and type = &#63; from the database.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @return the we deploy auth token that was removed
+	*/
+	public static WeDeployAuthToken removeByClientIdAndTokenType(
+		java.lang.String clientId, int type)
+		throws com.liferay.portal.security.wedeploy.auth.exception.NoSuchTokenException {
+		return getPersistence().removeByClientIdAndTokenType(clientId, type);
+	}
+
+	/**
+	* Returns the number of we deploy auth tokens where clientId = &#63; and type = &#63;.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @return the number of matching we deploy auth tokens
+	*/
+	public static int countByClientIdAndTokenType(java.lang.String clientId,
+		int type) {
+		return getPersistence().countByClientIdAndTokenType(clientId, type);
+	}
+
+	/**
 	* Caches the we deploy auth token in the entity cache if it is enabled.
 	*
 	* @param weDeployAuthToken the we deploy auth token

@@ -75,6 +75,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
+			{ "clientId", Types.VARCHAR },
 			{ "token", Types.VARCHAR },
 			{ "type_", Types.INTEGER }
 		};
@@ -87,11 +88,12 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
+		TABLE_COLUMNS_MAP.put("clientId", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("token", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("type_", Types.INTEGER);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table WeDeployAuth_WeDeployAuthToken (weDeployAuthTokenId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,token VARCHAR(75) null,type_ INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table WeDeployAuth_WeDeployAuthToken (weDeployAuthTokenId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,clientId VARCHAR(75) null,token VARCHAR(75) null,type_ INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table WeDeployAuth_WeDeployAuthToken";
 	public static final String ORDER_BY_JPQL = " ORDER BY weDeployAuthToken.weDeployAuthTokenId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY WeDeployAuth_WeDeployAuthToken.weDeployAuthTokenId ASC";
@@ -104,7 +106,12 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.portal.security.wedeploy.auth.service.util.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken"),
 			true);
-	public static final boolean COLUMN_BITMASK_ENABLED = false;
+	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.portal.security.wedeploy.auth.service.util.ServiceProps.get(
+				"value.object.column.bitmask.enabled.com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken"),
+			true);
+	public static final long CLIENTID_COLUMN_BITMASK = 1L;
+	public static final long TYPE_COLUMN_BITMASK = 2L;
+	public static final long WEDEPLOYAUTHTOKENID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -125,6 +132,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
+		model.setClientId(soapModel.getClientId());
 		model.setToken(soapModel.getToken());
 		model.setType(soapModel.getType());
 
@@ -198,6 +206,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
+		attributes.put("clientId", getClientId());
 		attributes.put("token", getToken());
 		attributes.put("type", getType());
 
@@ -243,6 +252,12 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 		if (modifiedDate != null) {
 			setModifiedDate(modifiedDate);
+		}
+
+		String clientId = (String)attributes.get("clientId");
+
+		if (clientId != null) {
+			setClientId(clientId);
 		}
 
 		String token = (String)attributes.get("token");
@@ -353,6 +368,32 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 	@JSON
 	@Override
+	public String getClientId() {
+		if (_clientId == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _clientId;
+		}
+	}
+
+	@Override
+	public void setClientId(String clientId) {
+		_columnBitmask |= CLIENTID_COLUMN_BITMASK;
+
+		if (_originalClientId == null) {
+			_originalClientId = _clientId;
+		}
+
+		_clientId = clientId;
+	}
+
+	public String getOriginalClientId() {
+		return GetterUtil.getString(_originalClientId);
+	}
+
+	@JSON
+	@Override
 	public String getToken() {
 		if (_token == null) {
 			return StringPool.BLANK;
@@ -375,7 +416,23 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 	@Override
 	public void setType(int type) {
+		_columnBitmask |= TYPE_COLUMN_BITMASK;
+
+		if (!_setOriginalType) {
+			_setOriginalType = true;
+
+			_originalType = _type;
+		}
+
 		_type = type;
+	}
+
+	public int getOriginalType() {
+		return _originalType;
+	}
+
+	public long getColumnBitmask() {
+		return _columnBitmask;
 	}
 
 	@Override
@@ -411,6 +468,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 		weDeployAuthTokenImpl.setUserName(getUserName());
 		weDeployAuthTokenImpl.setCreateDate(getCreateDate());
 		weDeployAuthTokenImpl.setModifiedDate(getModifiedDate());
+		weDeployAuthTokenImpl.setClientId(getClientId());
 		weDeployAuthTokenImpl.setToken(getToken());
 		weDeployAuthTokenImpl.setType(getType());
 
@@ -476,6 +534,14 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 		WeDeployAuthTokenModelImpl weDeployAuthTokenModelImpl = this;
 
 		weDeployAuthTokenModelImpl._setModifiedDate = false;
+
+		weDeployAuthTokenModelImpl._originalClientId = weDeployAuthTokenModelImpl._clientId;
+
+		weDeployAuthTokenModelImpl._originalType = weDeployAuthTokenModelImpl._type;
+
+		weDeployAuthTokenModelImpl._setOriginalType = false;
+
+		weDeployAuthTokenModelImpl._columnBitmask = 0;
 	}
 
 	@Override
@@ -514,6 +580,14 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 			weDeployAuthTokenCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
+		weDeployAuthTokenCacheModel.clientId = getClientId();
+
+		String clientId = weDeployAuthTokenCacheModel.clientId;
+
+		if ((clientId != null) && (clientId.length() == 0)) {
+			weDeployAuthTokenCacheModel.clientId = null;
+		}
+
 		weDeployAuthTokenCacheModel.token = getToken();
 
 		String token = weDeployAuthTokenCacheModel.token;
@@ -529,7 +603,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(17);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{weDeployAuthTokenId=");
 		sb.append(getWeDeployAuthTokenId());
@@ -543,6 +617,8 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 		sb.append(getCreateDate());
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
+		sb.append(", clientId=");
+		sb.append(getClientId());
 		sb.append(", token=");
 		sb.append(getToken());
 		sb.append(", type=");
@@ -554,7 +630,7 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(28);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("<model><model-name>");
 		sb.append(
@@ -586,6 +662,10 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>clientId</column-name><column-value><![CDATA[");
+		sb.append(getClientId());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>token</column-name><column-value><![CDATA[");
 		sb.append(getToken());
 		sb.append("]]></column-value></column>");
@@ -610,7 +690,12 @@ public class WeDeployAuthTokenModelImpl extends BaseModelImpl<WeDeployAuthToken>
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
+	private String _clientId;
+	private String _originalClientId;
 	private String _token;
 	private int _type;
+	private int _originalType;
+	private boolean _setOriginalType;
+	private long _columnBitmask;
 	private WeDeployAuthToken _escapedModel;
 }

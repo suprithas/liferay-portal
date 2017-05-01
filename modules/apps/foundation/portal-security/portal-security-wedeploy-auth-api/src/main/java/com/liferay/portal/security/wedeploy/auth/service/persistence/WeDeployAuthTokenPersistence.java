@@ -41,6 +41,102 @@ public interface WeDeployAuthTokenPersistence extends BasePersistence<WeDeployAu
 	 */
 
 	/**
+	* Returns the we deploy auth token where clientId = &#63; or throws a {@link NoSuchTokenException} if it could not be found.
+	*
+	* @param clientId the client ID
+	* @return the matching we deploy auth token
+	* @throws NoSuchTokenException if a matching we deploy auth token could not be found
+	*/
+	public WeDeployAuthToken findByClientId(java.lang.String clientId)
+		throws NoSuchTokenException;
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param clientId the client ID
+	* @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	*/
+	public WeDeployAuthToken fetchByClientId(java.lang.String clientId);
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param clientId the client ID
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	*/
+	public WeDeployAuthToken fetchByClientId(java.lang.String clientId,
+		boolean retrieveFromCache);
+
+	/**
+	* Removes the we deploy auth token where clientId = &#63; from the database.
+	*
+	* @param clientId the client ID
+	* @return the we deploy auth token that was removed
+	*/
+	public WeDeployAuthToken removeByClientId(java.lang.String clientId)
+		throws NoSuchTokenException;
+
+	/**
+	* Returns the number of we deploy auth tokens where clientId = &#63;.
+	*
+	* @param clientId the client ID
+	* @return the number of matching we deploy auth tokens
+	*/
+	public int countByClientId(java.lang.String clientId);
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; and type = &#63; or throws a {@link NoSuchTokenException} if it could not be found.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @return the matching we deploy auth token
+	* @throws NoSuchTokenException if a matching we deploy auth token could not be found
+	*/
+	public WeDeployAuthToken findByClientIdAndTokenType(
+		java.lang.String clientId, int type) throws NoSuchTokenException;
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; and type = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	*/
+	public WeDeployAuthToken fetchByClientIdAndTokenType(
+		java.lang.String clientId, int type);
+
+	/**
+	* Returns the we deploy auth token where clientId = &#63; and type = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching we deploy auth token, or <code>null</code> if a matching we deploy auth token could not be found
+	*/
+	public WeDeployAuthToken fetchByClientIdAndTokenType(
+		java.lang.String clientId, int type, boolean retrieveFromCache);
+
+	/**
+	* Removes the we deploy auth token where clientId = &#63; and type = &#63; from the database.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @return the we deploy auth token that was removed
+	*/
+	public WeDeployAuthToken removeByClientIdAndTokenType(
+		java.lang.String clientId, int type) throws NoSuchTokenException;
+
+	/**
+	* Returns the number of we deploy auth tokens where clientId = &#63; and type = &#63;.
+	*
+	* @param clientId the client ID
+	* @param type the type
+	* @return the number of matching we deploy auth tokens
+	*/
+	public int countByClientIdAndTokenType(java.lang.String clientId, int type);
+
+	/**
 	* Caches the we deploy auth token in the entity cache if it is enabled.
 	*
 	* @param weDeployAuthToken the we deploy auth token

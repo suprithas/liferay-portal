@@ -40,6 +40,7 @@ public class WeDeployAuthTokenSoap implements Serializable {
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
+		soapModel.setClientId(model.getClientId());
 		soapModel.setToken(model.getToken());
 		soapModel.setType(model.getType());
 
@@ -145,6 +146,14 @@ public class WeDeployAuthTokenSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
+	public String getClientId() {
+		return _clientId;
+	}
+
+	public void setClientId(String clientId) {
+		_clientId = clientId;
+	}
+
 	public String getToken() {
 		return _token;
 	}
@@ -167,6 +176,7 @@ public class WeDeployAuthTokenSoap implements Serializable {
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
+	private String _clientId;
 	private String _token;
 	private int _type;
 }
