@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.security.wedeploy.auth.constants.WeDeployAuthTokenConstants;
-import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken;
 import com.liferay.portal.security.wedeploy.auth.service.base.WeDeployAuthTokenLocalServiceBaseImpl;
 
@@ -35,10 +34,12 @@ public class WeDeployAuthTokenLocalServiceImpl
 
 	public WeDeployAuthToken addAccessWeDeployAuthToken(
 			long userId, String clientId, String clientSecret,
-			String authorizationToken, int type, ServiceContext serviceContext)
+			String authorizationToken, ServiceContext serviceContext)
 		throws PortalException {
 
-		validate(clientId, clientSecret, authorizationToken, type);
+		validate(
+			clientId, clientSecret, authorizationToken,
+			WeDeployAuthTokenConstants.TOKEN_TYPE_AUTHORIZATION);
 
 		String token = DigesterUtil.digestHex(
 			Digester.MD5, clientId.concat(authorizationToken),
