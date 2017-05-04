@@ -82,8 +82,8 @@ public interface WeDeployAuthTokenLocalService extends BaseLocalService,
 
 	public WeDeployAuthToken addAccessWeDeployAuthToken(long userId,
 		java.lang.String clientId, java.lang.String clientSecret,
-		java.lang.String authorizationToken, int type,
-		ServiceContext serviceContext) throws PortalException;
+		java.lang.String authorizationToken, ServiceContext serviceContext)
+		throws PortalException;
 
 	public WeDeployAuthToken addAuthorizationWeDeployAuthToken(long userId,
 		java.lang.String clientId, ServiceContext serviceContext)
