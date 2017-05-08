@@ -34,18 +34,20 @@ public class WeDeployAuthTokenLocalServiceImpl
 
 	public WeDeployAuthToken addAccessWeDeployAuthToken(
 			long userId, String clientId, String clientSecret,
-			String authorizationToken, int type, ServiceContext serviceContext)
+			String authorizationToken, ServiceContext serviceContext)
 		throws PortalException {
 
-		validate(clientId, clientSecret, authorizationToken, type);
+		validate(
+			clientId, clientSecret, authorizationToken,
+			WeDeployAuthTokenConstants.TYPE_AUTHORIZATION);
 
 		String token = DigesterUtil.digestHex(
 			Digester.MD5, clientId.concat(authorizationToken),
 			PwdGenerator.getPassword());
 
 		return addWeDeployAuthToken(
-			userId, clientId, token, WeDeployAuthTokenConstants.TYPE_ACCESS,
-			new ServiceContext());
+			userId, clientId, token,
+			WeDeployAuthTokenConstants.TYPE_ACCESS, new ServiceContext());
 	}
 
 	public WeDeployAuthToken addAuthorizationWeDeployAuthToken(

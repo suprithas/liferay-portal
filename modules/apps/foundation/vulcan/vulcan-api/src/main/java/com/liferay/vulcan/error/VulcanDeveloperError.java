@@ -12,41 +12,25 @@
  * details.
  */
 
-package com.liferay.vulcan.wiring.osgi.internal;
-
-import java.util.Optional;
-import java.util.function.Function;
+package com.liferay.vulcan.error;
 
 /**
  * @author Alejandro Hernández
- * @author Carlos Sierra Andrés
  * @author Jorge Ferrer
  */
-public class EmbeddedTuple<T, S> {
+public class VulcanDeveloperError extends Error {
 
-	public EmbeddedTuple(
-		String key, Class<S> modelClass,
-		Function<T, Optional<S>> modelFunction) {
+	public static class MustHaveValidGenericType extends VulcanDeveloperError {
 
-		_key = key;
-		_modelClass = modelClass;
-		_modelFunction = modelFunction;
+		public MustHaveValidGenericType(Class clazz) {
+			super(
+				"Class " + clazz.getName() + " must have a valid generic type");
+		}
+
 	}
 
-	public String getKey() {
-		return _key;
+	private VulcanDeveloperError(String message) {
+		super(message);
 	}
-
-	public Class<S> getModelClass() {
-		return _modelClass;
-	}
-
-	public Function<T, Optional<S>> getModelFunction() {
-		return _modelFunction;
-	}
-
-	private final String _key;
-	private final Class<S> _modelClass;
-	private final Function<T, Optional<S>> _modelFunction;
 
 }
