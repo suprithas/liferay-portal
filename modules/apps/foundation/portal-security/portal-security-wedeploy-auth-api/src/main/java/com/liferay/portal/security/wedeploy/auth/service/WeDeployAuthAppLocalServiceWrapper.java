@@ -231,6 +231,17 @@ public class WeDeployAuthAppLocalServiceWrapper
 			end, orderByComparator);
 	}
 
+	@Override
+	public java.util.List<com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp> getEntries() {
+		return _weDeployAuthAppLocalService.getEntries();
+	}
+
+	@Override
+	public java.util.List<com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp> getEntries(
+		int start, int end) {
+		return _weDeployAuthAppLocalService.getEntries(start, end);
+	}
+
 	/**
 	* Returns a range of all the we deploy auth apps.
 	*

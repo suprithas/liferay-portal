@@ -200,6 +200,12 @@ public interface WeDeployAuthAppLocalService extends BaseLocalService,
 	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
 		int end, OrderByComparator<T> orderByComparator);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<WeDeployAuthApp> getEntries();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<WeDeployAuthApp> getEntries(int start, int end);
+
 	/**
 	* Returns a range of all the we deploy auth apps.
 	*
