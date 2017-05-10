@@ -25,6 +25,7 @@ import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp;
 import com.liferay.portal.security.wedeploy.auth.service.base.WeDeployAuthAppLocalServiceBaseImpl;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Supritha Sundaram
@@ -69,6 +70,16 @@ public class WeDeployAuthAppLocalServiceImpl
 		resourceLocalService.addModelResources(weDeployAuthApp, serviceContext);
 
 		return weDeployAuthApp;
+	}
+
+	public List<WeDeployAuthApp> getEntries() {
+
+		return weDeployAuthAppPersistence.findAll();
+	}
+
+	public List<WeDeployAuthApp> getEntries(int start, int end) {
+
+		return weDeployAuthAppPersistence.findAll(start, end);
 	}
 
 }
