@@ -218,6 +218,15 @@ public class WeDeployAuthAppLocalServiceUtil {
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
 
+	public static java.util.List<com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp> getEntries() {
+		return getService().getEntries();
+	}
+
+	public static java.util.List<com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp> getEntries(
+		int start, int end) {
+		return getService().getEntries(start, end);
+	}
+
 	/**
 	* Returns a range of all the we deploy auth apps.
 	*
