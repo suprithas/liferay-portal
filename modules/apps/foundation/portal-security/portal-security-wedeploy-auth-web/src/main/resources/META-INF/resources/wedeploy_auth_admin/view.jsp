@@ -17,69 +17,79 @@
 <%@ include file="/init.jsp" %>
 
 <%
-SearchContainer<WeDeployAuthApp> weDeployAuthAppEntriesSearchContainer = new SearchContainer(renderRequest, null, null, SearchContainer.DEFAULT_CUR_PARAM, SearchContainer.DEFAULT_DELTA, currentURLObj, null, "no-entries-were-found");
+PortletURL portletURL = renderResponse.createRenderURL();
 
-weDeployAuthAppEntriesSearchContainer.setTotal(WeDeployAuthAppLocalServiceUtil.getWeDeployAuthAppsCount());
-weDeployAuthAppEntriesSearchContainer.setResults(WeDeployAuthAppLocalServiceUtil.getWeDeployAuthApps(QueryUtil.ALL_POS, QueryUtil.ALL_POS));
+portletURL.setParameter("mvcRenderCommandName", "/wedeploy_auth_admin/view");
 %>
 
-<aui:nav-bar markupView="lexicon">
+<aui:nav-bar cssClass="collapse-basic-search" markupView="lexicon">
 	<aui:nav cssClass="navbar-nav">
-		<portlet:renderURL var="weDeployAuthAppEntriesURL" />
-
 		<aui:nav-item
-			href="<%= weDeployAuthAppEntriesURL %>"
-			label="WeDeploy Auth App Entries"
+			href="<%= portletURL.toString() %>"
+			label="wedeploy-app"
+			selected="<%= true %>"
 		/>
 	</aui:nav>
 </aui:nav-bar>
 
-<div class="container-fluid-1280">
-	<aui:form action="<%= currentURL %>" method="get" name="fm">
-		<aui:input name="<%= Constants.CMD %>" type="hidden" />
-		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+<div class="container-fluid-1080 main-content-body">
+	<liferay-ui:search-container
+		emptyResultsMessage="no-wedeploy-apps-were-found"
+		id="weDeployAuthApps"
+		iteratorURL="<%= portletURL %>"
+	>
+		<liferay-ui:search-container-results>
 
-		<liferay-ui:search-container
-			id="weDeployAuthAppEntries"
-			searchContainer="<%= weDeployAuthAppEntriesSearchContainer %>"
-			total="<%= weDeployAuthAppEntriesSearchContainer.getTotal() %>"
+			<%
+			total = WeDeployAuthAppLocalServiceUtil.getWeDeployAuthAppsCount();
+
+			searchContainer.setTotal(total);
+
+			results = WeDeployAuthAppLocalServiceUtil.getWeDeployAuthApps(QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+			searchContainer.setResults(results);
+			%>
+
+		</liferay-ui:search-container-results>
+
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp"
+			keyProperty="weDeployAuthAppId"
+			modelVar="weDeployAuthApp"
 		>
-			<liferay-ui:search-container-results
-				results="<%= weDeployAuthAppEntriesSearchContainer.getResults() %>"
+			<liferay-ui:search-container-column-text
+				name="name"
+				orderable="<%= false %>"
+				property="name"
 			/>
 
-			<liferay-ui:search-container-row
-				className="com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp"
-				keyProperty="weDeployAuthAppId"
-				modelVar="weDeployAuthApp"
-			>
-				<liferay-ui:search-container-column-text
-					name="name"
-					value="<%= weDeployAuthApp.getName() %>"
-				/>
+			<liferay-ui:search-container-column-text
+				name="client-id"
+				orderable="<%= false %>"
+				property="clientId"
+			/>
 
-				<liferay-ui:search-container-column-text
-					name="client-id"
-					value="<%= weDeployAuthApp.getClientId() %>"
-				/>
+			<liferay-ui:search-container-column-text
+				name="client-secret"
+				orderable="<%= false %>"
+				property="clientSecret"
+			/>
 
-				<liferay-ui:search-container-column-text
-					name="client-secret"
-					value="<%= weDeployAuthApp.getClientSecret() %>"
-				/>
+			<liferay-ui:search-container-column-date
+				name="modified-date"
+				orderable="<%= false %>"
+				property="modifiedDate"
+			/>
+		</liferay-ui:search-container-row>
 
-				<liferay-ui:search-container-column-date
-					name="create-date"
-					value="<%= weDeployAuthApp.getCreateDate() %>"
-				/>
+		<liferay-ui:search-iterator displayStyle="list" markupView="lexicon" />
+	</liferay-ui:search-container>
 
-				<liferay-ui:search-container-column-date
-					name="modified-date"
-					value="<%= weDeployAuthApp.getModifiedDate() %>"
-				/>
-			</liferay-ui:search-container-row>
+	<portlet:renderURL var="editWeDeployAuthAdminURL">
+		<portlet:param name="mvcRenderCommandName" value="/wedeploy_auth_admin/edit_wedeploy_auth_admin" />
+	</portlet:renderURL>
 
-			<liferay-ui:search-iterator markupView="lexicon" searchContainer="<%= weDeployAuthAppEntriesSearchContainer %>" />
-		</liferay-ui:search-container>
-	</aui:form>
+	<liferay-frontend:add-menu>
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-wedeploy-app") %>' url="<%= editWeDeployAuthAdminURL %>" />
+	</liferay-frontend:add-menu>
 </div>
