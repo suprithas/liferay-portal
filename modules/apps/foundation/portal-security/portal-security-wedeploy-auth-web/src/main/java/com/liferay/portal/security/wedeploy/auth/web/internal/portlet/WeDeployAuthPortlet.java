@@ -16,6 +16,7 @@ package com.liferay.portal.security.wedeploy.auth.web.internal.portlet;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.security.wedeploy.auth.web.internal.constants.WeDeployAuthPortletKeys;
+
 import org.osgi.service.component.annotations.Component;
 
 import javax.portlet.Portlet;
