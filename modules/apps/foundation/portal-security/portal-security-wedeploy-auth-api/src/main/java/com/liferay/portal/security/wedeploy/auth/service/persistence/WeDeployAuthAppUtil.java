@@ -111,6 +111,71 @@ public class WeDeployAuthAppUtil {
 	}
 
 	/**
+	* Returns the we deploy auth app where clientId = &#63; and redirectURI = &#63; or throws a {@link NoSuchAppException} if it could not be found.
+	*
+	* @param clientId the client ID
+	* @param redirectURI the redirect uri
+	* @return the matching we deploy auth app
+	* @throws NoSuchAppException if a matching we deploy auth app could not be found
+	*/
+	public static WeDeployAuthApp findByCI_RU(java.lang.String clientId,
+		java.lang.String redirectURI)
+		throws com.liferay.portal.security.wedeploy.auth.exception.NoSuchAppException {
+		return getPersistence().findByCI_RU(clientId, redirectURI);
+	}
+
+	/**
+	* Returns the we deploy auth app where clientId = &#63; and redirectURI = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param clientId the client ID
+	* @param redirectURI the redirect uri
+	* @return the matching we deploy auth app, or <code>null</code> if a matching we deploy auth app could not be found
+	*/
+	public static WeDeployAuthApp fetchByCI_RU(java.lang.String clientId,
+		java.lang.String redirectURI) {
+		return getPersistence().fetchByCI_RU(clientId, redirectURI);
+	}
+
+	/**
+	* Returns the we deploy auth app where clientId = &#63; and redirectURI = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param clientId the client ID
+	* @param redirectURI the redirect uri
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the matching we deploy auth app, or <code>null</code> if a matching we deploy auth app could not be found
+	*/
+	public static WeDeployAuthApp fetchByCI_RU(java.lang.String clientId,
+		java.lang.String redirectURI, boolean retrieveFromCache) {
+		return getPersistence()
+				   .fetchByCI_RU(clientId, redirectURI, retrieveFromCache);
+	}
+
+	/**
+	* Removes the we deploy auth app where clientId = &#63; and redirectURI = &#63; from the database.
+	*
+	* @param clientId the client ID
+	* @param redirectURI the redirect uri
+	* @return the we deploy auth app that was removed
+	*/
+	public static WeDeployAuthApp removeByCI_RU(java.lang.String clientId,
+		java.lang.String redirectURI)
+		throws com.liferay.portal.security.wedeploy.auth.exception.NoSuchAppException {
+		return getPersistence().removeByCI_RU(clientId, redirectURI);
+	}
+
+	/**
+	* Returns the number of we deploy auth apps where clientId = &#63; and redirectURI = &#63;.
+	*
+	* @param clientId the client ID
+	* @param redirectURI the redirect uri
+	* @return the number of matching we deploy auth apps
+	*/
+	public static int countByCI_RU(java.lang.String clientId,
+		java.lang.String redirectURI) {
+		return getPersistence().countByCI_RU(clientId, redirectURI);
+	}
+
+	/**
 	* Returns the we deploy auth app where clientId = &#63; and clientSecret = &#63; or throws a {@link NoSuchAppException} if it could not be found.
 	*
 	* @param clientId the client ID

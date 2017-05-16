@@ -70,19 +70,20 @@ public class WeDeployAuthTokenLocalServiceWrapper
 	public com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addAccessWeDeployAuthToken(
 		java.lang.String clientId, java.lang.String clientSecret,
 		java.lang.String authorizationToken, int type,
+		java.lang.String redirectURI,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _weDeployAuthTokenLocalService.addAccessWeDeployAuthToken(clientId,
-			clientSecret, authorizationToken, type, serviceContext);
+			clientSecret, authorizationToken, type, redirectURI, serviceContext);
 	}
 
 	@Override
 	public com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addAuthorizationWeDeployAuthToken(
-		long userId, java.lang.String clientId,
+		long userId, java.lang.String clientId, java.lang.String redirectURI,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _weDeployAuthTokenLocalService.addAuthorizationWeDeployAuthToken(userId,
-			clientId, serviceContext);
+			clientId, redirectURI, serviceContext);
 	}
 
 	/**
