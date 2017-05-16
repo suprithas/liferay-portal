@@ -25,11 +25,9 @@ import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.struts.BaseStrutsAction;
 import com.liferay.portal.kernel.struts.StrutsAction;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ContentTypes;
-import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.wedeploy.auth.constants.WeDeployAuthTokenConstants;
 import com.liferay.portal.security.wedeploy.auth.exception.NoSuchAppException;
 import com.liferay.portal.security.wedeploy.auth.exception.NoSuchTokenException;
@@ -56,82 +54,62 @@ public class WeDeployAccessTokenAction extends BaseStrutsAction {
 			HttpServletRequest request, HttpServletResponse response)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		if (!themeDisplay.isSignedIn()) {
-			WeDeployTokenActionUtil.sendLoginRedirect(
-				request, response, themeDisplay.getPlid());
-
-			return null;
-		}
-
 		String clientId = ParamUtil.getString(request, "client_id");
 		String clientSecret = ParamUtil.getString(request, "client_secret");
 		String authorizationToken = ParamUtil.getString(request, "code");
-		String redirectURI = ParamUtil.getString(request, "redirect_uri");
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			WeDeployAuthToken.class.getName(), request);
 
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
 		try {
-			WeDeployAuthToken weDeployAuthAccessToken =
+			WeDeployAuthToken weDeployAuthToken =
 				_weDeployAuthTokenLocalService.addAccessWeDeployAuthToken(
-					themeDisplay.getUserId(), clientId, clientSecret,
-					authorizationToken,
+					clientId, clientSecret, authorizationToken,
 					WeDeployAuthTokenConstants.TYPE_AUTHORIZATION,
 					serviceContext);
 
-			redirectURI = HttpUtil.addParameter(
-				redirectURI, "token", weDeployAuthAccessToken.getToken());
-
-			JSONObject elementJSONObject = JSONFactoryUtil.createJSONObject();
-
-			elementJSONObject.put(
-				"email", themeDisplay.getUser().getEmailAddress());
-			elementJSONObject.put("name", themeDisplay.getUser().getFullName());
-
-			jsonObject.put("info", elementJSONObject);
+			jsonObject.put("access_token", weDeployAuthToken.getToken());
 		}
 		catch (NoSuchAppException nsae) {
-			_log.error(nsae);
+			if (_log.isDebugEnabled()) {
+				_log.debug(nsae, nsae);
+			}
 
 			jsonObject.put(
 				"error_message",
 				LanguageUtil.get(
-					themeDisplay.getLocale(),
+					LocaleUtil.getDefault(),
 					"client-id-and-client-secret-do-not-match"));
 		}
 		catch (NoSuchTokenException nste) {
-			_log.error(nste);
+			if (_log.isDebugEnabled()) {
+				_log.debug(nste, nste);
+			}
 
 			jsonObject.put(
 				"error_message",
 				LanguageUtil.get(
-					themeDisplay.getLocale(), "request-token-does-not-match"));
+					LocaleUtil.getDefault(), "request-token-does-not-match"));
 		}
 		catch (Exception e) {
-			_log.error(e);
+			_log.error(e, e);
 
 			jsonObject.put(
 				"error_message",
 				LanguageUtil.get(
-					themeDisplay.getLocale(),
+					LocaleUtil.getDefault(),
 					"an-error-occurred-while-processing-the-requested-" +
 						"resource"));
 		}
 
 		response.setContentType(ContentTypes.APPLICATION_JSON);
-
 		response.setHeader(
 			HttpHeaders.CACHE_CONTROL,
 			HttpHeaders.CACHE_CONTROL_NO_CACHE_VALUE);
 
 		ServletResponseUtil.write(response, jsonObject.toString());
-
-		response.sendRedirect(redirectURI);
 
 		return null;
 	}
