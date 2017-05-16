@@ -71,20 +71,21 @@ public class WeDeployAuthTokenLocalServiceUtil {
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addAccessWeDeployAuthToken(
 		java.lang.String clientId, java.lang.String clientSecret,
 		java.lang.String authorizationToken, int type,
+		java.lang.String redirectURI,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addAccessWeDeployAuthToken(clientId, clientSecret,
-			authorizationToken, type, serviceContext);
+			authorizationToken, type, redirectURI, serviceContext);
 	}
 
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken addAuthorizationWeDeployAuthToken(
-		long userId, java.lang.String clientId,
+		long userId, java.lang.String clientId, java.lang.String redirectURI,
 		com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addAuthorizationWeDeployAuthToken(userId, clientId,
-			serviceContext);
+			redirectURI, serviceContext);
 	}
 
 	/**
