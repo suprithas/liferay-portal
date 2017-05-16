@@ -21,11 +21,16 @@
 		<!-- Other fields -->
 
 		<column name="name" type="String" />
+		<column name="redirectURI" type="String" />
 		<column name="clientId" type="String" />
 		<column name="clientSecret" type="String" />
 
 		<!-- Finder methods -->
 
+		<finder name="CI_RU" return-type="WeDeployAuthApp">
+			<finder-column name="clientId" />
+			<finder-column name="redirectURI" />
+		</finder>
 		<finder name="CI_CS" return-type="WeDeployAuthApp">
 			<finder-column name="clientId" />
 			<finder-column name="clientSecret" />

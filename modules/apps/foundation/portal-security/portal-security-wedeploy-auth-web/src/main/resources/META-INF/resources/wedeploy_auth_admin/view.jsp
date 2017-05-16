@@ -75,6 +75,12 @@ portletURL.setParameter("mvcRenderCommandName", "/wedeploy_auth_admin/view");
 				property="clientSecret"
 			/>
 
+			<liferay-ui:search-container-column-text
+				name="redirect-uri"
+				orderable="<%= false %>"
+				property="redirectURI"
+			/>
+
 			<liferay-ui:search-container-column-date
 				name="modified-date"
 				orderable="<%= false %>"

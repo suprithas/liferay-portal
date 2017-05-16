@@ -34,10 +34,9 @@ public class WeDeployAuthAppLocalServiceImpl
 
 	@Override
 	public WeDeployAuthApp addWeDeployAuthApp(
-			long userId, String name, ServiceContext serviceContext)
+			long userId, String name, String redirectURI,
+			ServiceContext serviceContext)
 		throws PortalException {
-
-		// WeDeploy auth app
 
 		User user = userLocalService.fetchUserById(userId);
 		Date date = new Date();
@@ -53,6 +52,7 @@ public class WeDeployAuthAppLocalServiceImpl
 		weDeployAuthApp.setCreateDate(serviceContext.getCreateDate(date));
 		weDeployAuthApp.setModifiedDate(serviceContext.getModifiedDate(date));
 		weDeployAuthApp.setName(name);
+		weDeployAuthApp.setRedirectURI(redirectURI);
 
 		String clientId = PortalUUIDUtil.generate();
 
