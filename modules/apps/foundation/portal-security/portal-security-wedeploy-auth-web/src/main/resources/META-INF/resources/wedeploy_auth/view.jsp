@@ -20,9 +20,27 @@
 String clientId = ParamUtil.getString(request, "clientId");
 
 String redirectURI = ParamUtil.getString(request, "redirectURI");
+
+String weDeployAuthAppName = null;
+
+try {
+    weDeployAuthAppName = WeDeployAuthAppLocalServiceUtil.getWeDeployAuthAppName(clientId, redirectURI);
+}
+catch (Exception e) {
+	return;
+}
 %>
 
 <div class="container-fluid-1280">
+	<p>
+		<%= LanguageUtil.format(request, "x-would-like-to-view-the-following-information", weDeployAuthAppName) %>
+	</p>
+
+	<p>
+		<liferay-ui:message key="full-name" /><br />
+		<liferay-ui:message key="email-address" />
+	</p>
+
 	<div class="button-holder">
 		<portlet:actionURL name="/wedeploy_auth/authorize_user" var="allowAuthorizeUserURL">
 			<portlet:param name="<%= Constants.CMD %>" value="allow" />

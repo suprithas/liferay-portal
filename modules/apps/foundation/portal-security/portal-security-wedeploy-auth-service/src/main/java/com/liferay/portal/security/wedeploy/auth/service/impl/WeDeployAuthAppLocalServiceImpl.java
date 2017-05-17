@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.PwdGenerator;
 import com.liferay.portal.kernel.uuid.PortalUUIDUtil;
+import com.liferay.portal.security.wedeploy.auth.exception.NoSuchAppException;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp;
 import com.liferay.portal.security.wedeploy.auth.service.base.WeDeployAuthAppLocalServiceBaseImpl;
 
@@ -70,6 +71,15 @@ public class WeDeployAuthAppLocalServiceImpl
 		resourceLocalService.addModelResources(weDeployAuthApp, serviceContext);
 
 		return weDeployAuthApp;
+	}
+
+	public String getWeDeployAuthAppName(String clientId, String redirectURI)
+		throws NoSuchAppException {
+
+		WeDeployAuthApp weDeployAuthApp =
+			weDeployAuthAppPersistence.findByCI_RU(clientId, redirectURI);
+
+		return weDeployAuthApp.getName();
 	}
 
 }
