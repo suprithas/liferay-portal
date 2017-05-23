@@ -127,6 +127,14 @@ public class WeDeployAuthAppLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp fetchWeDeployAuthApp(
+		java.lang.String redirectURI, java.lang.String clientId)
+		throws com.liferay.portal.security.wedeploy.auth.exception.NoSuchAppException {
+		return _weDeployAuthAppLocalService.fetchWeDeployAuthApp(redirectURI,
+			clientId);
+	}
+
+	@Override
+	public com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp fetchWeDeployAuthApp(
 		long weDeployAuthAppId) {
 		return _weDeployAuthAppLocalService.fetchWeDeployAuthApp(weDeployAuthAppId);
 	}

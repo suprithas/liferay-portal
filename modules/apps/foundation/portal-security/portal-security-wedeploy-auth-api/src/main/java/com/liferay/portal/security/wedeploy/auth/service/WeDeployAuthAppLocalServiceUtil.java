@@ -123,6 +123,12 @@ public class WeDeployAuthAppLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp fetchWeDeployAuthApp(
+		java.lang.String redirectURI, java.lang.String clientId)
+		throws com.liferay.portal.security.wedeploy.auth.exception.NoSuchAppException {
+		return getService().fetchWeDeployAuthApp(redirectURI, clientId);
+	}
+
+	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp fetchWeDeployAuthApp(
 		long weDeployAuthAppId) {
 		return getService().fetchWeDeployAuthApp(weDeployAuthAppId);
 	}

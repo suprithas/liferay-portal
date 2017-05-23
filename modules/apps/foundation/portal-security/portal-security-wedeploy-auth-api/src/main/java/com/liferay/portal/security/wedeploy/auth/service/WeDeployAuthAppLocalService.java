@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.transaction.Isolation;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.security.wedeploy.auth.exception.NoSuchAppException;
 import com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthApp;
 
 import java.io.Serializable;
@@ -121,6 +122,10 @@ public interface WeDeployAuthAppLocalService extends BaseLocalService,
 	@Indexable(type = IndexableType.DELETE)
 	public WeDeployAuthApp deleteWeDeployAuthApp(long weDeployAuthAppId)
 		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public WeDeployAuthApp fetchWeDeployAuthApp(java.lang.String redirectURI,
+		java.lang.String clientId) throws NoSuchAppException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WeDeployAuthApp fetchWeDeployAuthApp(long weDeployAuthAppId);
