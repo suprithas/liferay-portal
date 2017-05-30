@@ -147,6 +147,13 @@ public class WeDeployAuthTokenLocalServiceWrapper
 	}
 
 	@Override
+	public com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken fetchTokenByType(
+		java.lang.String token, int type)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _weDeployAuthTokenLocalService.fetchTokenByType(token, type);
+	}
+
+	@Override
 	public com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken fetchWeDeployAuthToken(
 		long weDeployAuthTokenId) {
 		return _weDeployAuthTokenLocalService.fetchWeDeployAuthToken(weDeployAuthTokenId);

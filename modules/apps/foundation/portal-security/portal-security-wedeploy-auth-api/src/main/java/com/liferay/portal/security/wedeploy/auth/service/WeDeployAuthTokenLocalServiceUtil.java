@@ -144,6 +144,12 @@ public class WeDeployAuthTokenLocalServiceUtil {
 		return getService().deleteWeDeployAuthToken(weDeployAuthTokenId);
 	}
 
+	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken fetchTokenByType(
+		java.lang.String token, int type)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().fetchTokenByType(token, type);
+	}
+
 	public static com.liferay.portal.security.wedeploy.auth.model.WeDeployAuthToken fetchWeDeployAuthToken(
 		long weDeployAuthTokenId) {
 		return getService().fetchWeDeployAuthToken(weDeployAuthTokenId);

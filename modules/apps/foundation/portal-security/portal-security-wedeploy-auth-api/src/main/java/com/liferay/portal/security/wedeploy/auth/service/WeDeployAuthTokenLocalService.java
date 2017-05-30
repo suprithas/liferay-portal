@@ -133,6 +133,10 @@ public interface WeDeployAuthTokenLocalService extends BaseLocalService,
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public WeDeployAuthToken fetchTokenByType(java.lang.String token, int type)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public WeDeployAuthToken fetchWeDeployAuthToken(long weDeployAuthTokenId);
 
 	/**
