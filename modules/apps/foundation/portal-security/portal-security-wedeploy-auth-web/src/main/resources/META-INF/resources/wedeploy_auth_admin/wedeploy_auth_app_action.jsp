@@ -1,4 +1,7 @@
-<%--
+<%@ page
+		import="com.liferay.portal.kernel.security.permission.ActionKeys" %>
+<%@ page
+		import="com.liferay.portal.security.wedeploy.auth.service.permission.WeDeployAuthAppPermission" %><%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -26,6 +29,7 @@ PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("mvcRenderCommandName", "/wedeploy_auth_admin/view");
 %>
 
+<c:if test="<%= WeDeployAuthAppPermission.contains(permissionChecker, scopeGroupId, ActionKeys.DELETE) %>">
 <liferay-ui:icon-menu direction="right" icon="<%= StringPool.BLANK %>" markupView="lexicon" message="<%= StringPool.BLANK %>" showWhenSingleIcon="<%= true %>">
 	<portlet:renderURL var="redirectURL">
 		<portlet:param name="mvcRenderCommandName" value="/wedeploy_auth_admin/view" />
@@ -39,3 +43,4 @@ portletURL.setParameter("mvcRenderCommandName", "/wedeploy_auth_admin/view");
 
 	<liferay-ui:icon-delete url="<%= deleteURL %>" />
 </liferay-ui:icon-menu>
+</c:if>
